@@ -2,25 +2,159 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #27272a;
+  --muted: #525252;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-pp-mori: "PP Mori", var(--font-inter), sans-serif;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  cursor: none !important;
+}
+
+/* Hide native cursor on all interactive elements */
+a,
+button,
+[role="button"],
+[href] {
+  cursor: none !important;
+}
+
+/* Restore default cursor only over hero image (blob area) */
+.hide-custom-cursor {
+  cursor: auto !important;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.8s ease-out forwards;
+}
+
+/* Hide custom cursor on touch/mobile (desktop-only) */
+@media (hover: none) {
+  .site-cursor,
+  .hide-cursor-on-touch {
+    display: none !important;
+  }
+}
+
+/* Hide scrollbar on bio scroll container */
+.bio-scroll-container::-webkit-scrollbar {
+  display: none;
+}
+.bio-scroll-container {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+/* Bio section active/inactive states - header vs body */
+/* Use !important to override Tailwind base/utilities in v4 */
+.bio-section.active .section-header {
+  font-size: 15px !important;
+  font-family: "PP Mori", var(--font-inter), sans-serif !important;
+  font-weight: 400 !important;
+  opacity: 1 !important;
+}
+.bio-section.active .section-body {
+  font-size: 20px !important;
+  font-weight: 400 !important;
+  opacity: 1 !important;
+}
+/* Mobile plain-scroll layout: section labels + body */
+@media (max-width: 767px) {
+  .mobile-section-label {
+    font-size: 15px;
+    font-family: "PP Mori", var(--font-inter), sans-serif;
+    font-weight: 600;
+    color: #000;
+  }
+  .mobile-section-body {
+    font-size: 22px;
+    line-height: 140%;
+    color: #000;
+    white-space: pre-line;
+  }
+}
+@media (max-width: 767px) {
+  .mobile-sections > *:first-child {
+    padding-top: 48px;
+  }
+  .mobile-sections > *:last-child {
+    padding-bottom: 80px;
+  }
+}
+@media (max-width: 768px) {
+  .section-body {
+    font-size: 16px !important;
+    line-height: 140% !important;
+  }
+  .section-body-spacer {
+    font-size: 16px !important;
+  }
+}
+.bio-section.inactive .section-header,
+.bio-section.inactive .section-body {
+  opacity: 0 !important;
+}
+.bio-section .section-header,
+.bio-section .section-body {
+  transition: opacity 0.4s ease-out, font-size 0.3s ease;
+  will-change: opacity, font-size;
+}
+.bio-section .section-body {
+  white-space: pre-line;
+}
+
+/* Section content wrapper: smooth fade-out when scrolling away */
+.bio-section .section-content {
+  transition: opacity 0.4s ease-out;
+}
+.bio-section.active .section-content {
+  opacity: 1;
+}
+.bio-section.inactive .section-content {
+  opacity: 1;
+  pointer-events: none;
+}
+
+/* Caret: fade-in to bob range, then loop with opacity in sync */
+@keyframes caret-fade-in {
+  0% { opacity: 0; transform: translateY(0); }
+  100% { opacity: 0.25; transform: translateY(0); }
+}
+@keyframes caret-bob {
+  0%, 100% { opacity: 0.25; transform: translateY(0); }
+  50% { opacity: 0.5; transform: translateY(4px); }
+}
+.bio-caret-wrapper.bio-caret-down.bio-caret-visible {
+  animation:
+    caret-fade-in 1.2s ease-in forwards,
+    caret-bob 1.5s ease-in-out 1.2s infinite;
+}
+
+a.bio-link {
+  text-decoration: underline !important;
+  text-underline-offset: 2px;
+  color: inherit;
+  transition: color 0.2s ease;
+}
+a.bio-link:hover {
+  color: #5500ff !important;
 }
