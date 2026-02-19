@@ -118,10 +118,18 @@ const SECTIONS = [
   {
     header: "Reach out",
     bodySegments: [
-      { type: "link" as const, href: "mailto:vince@stylar.com", text: "Open", external: false },
-      { type: "text" as const, text: " to whatever's caught your imagination." },
+      { type: "text" as const, text: "Open to " },
+      { type: "link" as const, href: "mailto:vince@stylar.com", text: "connect", external: false },
+      { type: "text" as const, text: " on whatever's caught your imagination." },
     ],
   },
+] as const;
+
+const SOCIAL_LINKS = [
+  { href: "https://instagram.com/itsanvincent", icon: "/icons/instagram.svg", label: "Instagram" },
+  { href: "https://x.com/itsanvincent", icon: "/icons/x.svg", label: "X" },
+  { href: "https://linkedin.com/in/itsanvincent", icon: "/icons/linkedin.svg", label: "LinkedIn" },
+  { href: "https://youtube.com/@vincentan8085", icon: "/icons/youtube.svg", label: "YouTube" },
 ] as const;
 
 function bodyLength(segments: readonly BodySegment[]): number {
@@ -273,6 +281,21 @@ export default function ProgressiveRevealBio({ mobileHero }: { mobileHero?: Reac
               >
                 <h2 className="mobile-section-label mb-2">{s.header}</h2>
                 <p className="mobile-section-body">{renderBodyUpTo([...s.bodySegments], bodyLength(s.bodySegments))}</p>
+                {i === SECTIONS.length - 1 && (
+                  <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
+                    {SOCIAL_LINKS.map(({ href, icon, label }) => (
+                      <a
+                        key={href}
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={label}
+                      >
+                        <img src={icon} alt="" width={20} height={20} style={{ display: "block" }} />
+                      </a>
+                    ))}
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -336,6 +359,21 @@ export default function ProgressiveRevealBio({ mobileHero }: { mobileHero?: Reac
               </div>
               {i < lastIndex && (
                 <CaretDown isVisible={typewriterDone[i]} onClick={stepDown} />
+              )}
+              {i === SECTIONS.length - 1 && (
+                <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
+                  {SOCIAL_LINKS.map(({ href, icon, label }) => (
+                    <a
+                      key={href}
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={label}
+                    >
+                      <img src={icon} alt="" width={20} height={20} style={{ display: "block" }} />
+                    </a>
+                  ))}
+                </div>
               )}
             </div>
           </div>
