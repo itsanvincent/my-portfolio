@@ -24,10 +24,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link
+        {/* <link
           href="https://api.fontshare.com/v2/css?f[]=pp-mori@400,600,700&display=swap"
           rel="stylesheet"
-        />
+        /> */}
         <Script
             src="https://www.googletagmanager.com/gtag/js?id=G-CY7QPPTSSV"
             strategy="afterInteractive"

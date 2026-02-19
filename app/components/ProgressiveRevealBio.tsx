@@ -318,11 +318,11 @@ export default function ProgressiveRevealBio({ mobileHero }: { mobileHero?: Reac
           >
             <div className="section-content w-full max-w-[400px] md:max-w-[400px] flex flex-col items-start px-6 md:px-0">
               {i === 0 ? (
-                <h1 className="section-header mb-3 hidden md:block" style={{ color: "#000", lineHeight: "120%" }}>
+                <h1 className="section-header mb-2 hidden md:block" style={{ color: "#000", lineHeight: "120%" }}>
                   {section.header}
                 </h1>
               ) : (
-                <h2 className="section-header mb-4" style={{ color: "#000", lineHeight: "120%" }}>
+                <h2 className="section-header mb-2" style={{ color: "#000", lineHeight: "120%" }}>
                   {section.header}
                 </h2>
               )}

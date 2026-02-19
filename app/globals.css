@@ -6,6 +6,27 @@
   --muted: #525252;
 }
 
+@font-face {
+  font-family: 'PP Mori';
+  src: url('/fonts/PPMori-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'PP Mori';
+  src: url('/fonts/PPMori-Semibold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'PP Mori';
+  src: url('/fonts/PPMori-Black.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -68,8 +89,8 @@ button,
 /* Use !important to override Tailwind base/utilities in v4 */
 .bio-section.active .section-header {
   font-size: 15px !important;
-  font-family: "PP Mori", var(--font-inter), sans-serif !important;
-  font-weight: 400 !important;
+  font-family: 'PP Mori', sans-serif !important;
+  font-weight: 600 !important;
   opacity: 1 !important;
 }
 .bio-section.active .section-body {
@@ -81,7 +102,7 @@ button,
 @media (max-width: 767px) {
   .mobile-section-label {
     font-size: 15px;
-    font-family: "PP Mori", var(--font-inter), sans-serif;
+    font-family: 'PP Mori', sans-serif !important;
     font-weight: 600;
     color: #000;
   }
@@ -157,4 +178,9 @@ a.bio-link {
 }
 a.bio-link:hover {
   color: #5500ff !important;
+}
+
+/* Temporary test: max specificity so PP Mori wins. If font still doesn't show, the font file isn't loading. */
+html body .mobile-section-label {
+  font-family: 'PP Mori', sans-serif !important;
 }
