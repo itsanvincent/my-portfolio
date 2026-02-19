@@ -10,7 +10,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Chroma · Study 01",
+  title: "Vincent An",
   description:
     "Chromatic study — A quiet halo follows the cursor. GLSL shaders · Three.js",
 };
