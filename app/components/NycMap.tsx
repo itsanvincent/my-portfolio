@@ -94,8 +94,13 @@ export default function NycMap() {
     >
       <div
         ref={containerRef}
-        className="absolute inset-0 h-full w-full"
+        className="absolute"
         style={{
+          // Bleed the map 24px past the circle on every side so Mapbox's
+          // logo (pinned to the map's bottom-left) falls outside the crop
+          inset: "-24px",
+          width: "calc(100% + 48px)",
+          height: "calc(100% + 48px)",
           WebkitMaskImage: DOT_MASK,
           maskImage: DOT_MASK,
           WebkitMaskSize: `${DOT_CELL_PX}px ${DOT_CELL_PX}px`,
