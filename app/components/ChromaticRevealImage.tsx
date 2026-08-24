@@ -2,6 +2,7 @@
 
 import { useRef, useState, useCallback, useEffect, useLayoutEffect } from "react";
 import ChromaticCanvas from "./ChromaticCanvas";
+import NycMap from "./NycMap";
 
 const IS_DEV = process.env.NODE_ENV === "development";
 
@@ -17,9 +18,7 @@ const CURSOR_LERP = 0.05; // Smoothing: mask/chromatic chase cursor with slight 
 
 export default function ChromaticRevealImage() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const maskLayerRef = useRef<HTMLDivElement>(null);
-  const blobPathRef = useRef<SVGPathElement>(null);
-  const svgRef = useRef<SVGSVGElement>(null);
+  const revealLayerRef = useRef<HTMLDivElement>(null);
   const [debugOpen, setDebugOpen] = useState(false);
 
   const blobParamsRef = useRef({ ...DEFAULT_BLOB });
@@ -33,14 +32,6 @@ export default function ChromaticRevealImage() {
   const targetPosPxRef = useRef({ x: 200, y: 200 });
   const smoothedPosPxRef = useRef({ x: 200, y: 200 });
   const mousePosRef = useRef<{ x: number; y: number } | null>({ x: 0.5, y: 0.5 });
-  const blobScaleRef = useRef(1);
-
-  useEffect(() => {
-    if ("ontouchstart" in window) {
-      blobScaleRef.current = 1;
-      console.log("[SET blobScale]", 1, new Error().stack);
-    }
-  }, []);
 
   useEffect(() => {
     blobParamsRef.current = {
@@ -151,27 +142,23 @@ export default function ChromaticRevealImage() {
     []
   );
 
+  // The photo layer sits ABOVE the map and is clipped to the blob each frame
+  // via clip-path: path(...). (An SVG url(#mask) reference here breaks on iOS
+  // WebKit, which is why the reveal previously vanished on mobile.)
   useLayoutEffect(() => {
-    const pathEl = blobPathRef.current;
+    const layerEl = revealLayerRef.current;
     const container = containerRef.current;
-    if (!pathEl || !container) return;
+    if (!layerEl || !container) return;
 
     const start = performance.now();
     let rafId = 0;
-    let lastW = 280;
-    let lastH = 280;
 
     const tick = () => {
-      if (typeof window !== "undefined" && "ontouchstart" in window) {
-        blobScaleRef.current = 1;
-        console.log("[SET blobScale]", 1, new Error().stack);
-      }
       const rect = container.getBoundingClientRect();
       const w = Math.max(rect.width, 1);
       const h = Math.max(rect.height, 1);
       const target = targetPosPxRef.current;
       const smoothed = smoothedPosPxRef.current;
-      console.log("[RAF] blobScale:", blobScaleRef.current, "smoothed:", smoothedPosPxRef.current, "target:", targetPosPxRef.current);
 
       // Lerp smoothed position towards cursor for organic following
       smoothed.x += (target.x - smoothed.x) * CURSOR_LERP;
@@ -181,18 +168,9 @@ export default function ChromaticRevealImage() {
       mousePosRef.current = { x: smoothed.x / w, y: 1 - smoothed.y / h };
 
       const t = performance.now() - start;
-      const svgEl = svgRef.current;
-      console.log("[SVG]", svgEl?.getBoundingClientRect());
-      const { baseRadius } = blobParamsRef.current;
-      const calculatedRadius = baseRadius;
-      console.log("[PARAMS] baseRadius:", blobParamsRef.current?.baseRadius);
-      console.log("[DRAW] radius:", calculatedRadius, "blobScale:", blobScaleRef.current);
-      pathEl.setAttribute("d", buildBlobPath(smoothed.x, smoothed.y, t, w, h));
-      if (rect.width > 0 && rect.height > 0) {
-        lastW = rect.width;
-        lastH = rect.height;
-      }
-      svgRef.current?.setAttribute("viewBox", `0 0 ${lastW} ${lastH}`);
+      const clip = `path("${buildBlobPath(smoothed.x, smoothed.y, t, w, h)}")`;
+      layerEl.style.clipPath = clip;
+      (layerEl.style as CSSStyleDeclaration & { webkitClipPath?: string }).webkitClipPath = clip;
     };
 
     tick();
@@ -305,24 +283,6 @@ export default function ChromaticRevealImage() {
         </div>
       )}
       <div ref={containerRef} className="relative w-full h-full rounded-full overflow-hidden" style={{ width: "100%", height: "100%", position: "relative" }}>
-        <svg
-          ref={svgRef}
-          width="100%"
-          height="100%"
-          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}
-          aria-hidden
-        >
-          <defs>
-            <filter id="blob-soften" x="-5%" y="-5%" width="110%" height="110%">
-              <feGaussianBlur stdDeviation="1.5" />
-            </filter>
-            <mask id="blob-reveal-mask" maskUnits="userSpaceOnUse">
-              <rect width="100%" height="100%" fill="white" />
-              <path ref={blobPathRef} fill="black" filter="url(#blob-soften)" d={initialPath} />
-            </mask>
-          </defs>
-        </svg>
-
         <div
           style={{
             position: "absolute",
@@ -333,11 +293,11 @@ export default function ChromaticRevealImage() {
             zIndex: 1,
           }}
         >
-          <ChromaticCanvas imageSrc="/hero-image-bottom.jpg" externalMouseRef={mousePosRef} />
+          <NycMap />
         </div>
 
         <div
-          ref={maskLayerRef}
+          ref={revealLayerRef}
           style={{
             position: "absolute",
             top: 0,
@@ -346,17 +306,11 @@ export default function ChromaticRevealImage() {
             height: "100%",
             zIndex: 2,
             pointerEvents: "none",
-            WebkitMaskImage: "url(#blob-reveal-mask)",
-            maskImage: "url(#blob-reveal-mask)",
-            WebkitMaskSize: "100% 100%",
-            WebkitMaskPosition: "0 0",
-            WebkitMaskRepeat: "no-repeat",
-            maskSize: "100% 100%",
-            maskPosition: "0 0",
-            maskRepeat: "no-repeat",
+            clipPath: `path("${initialPath}")`,
+            WebkitClipPath: `path("${initialPath}")`,
           } as React.CSSProperties}
         >
-          <ChromaticCanvas imageSrc="/hero-image-top.jpg" externalMouseRef={mousePosRef} />
+          <ChromaticCanvas imageSrc="/hero-image-bottom.jpg" externalMouseRef={mousePosRef} />
         </div>
       </div>
     </>

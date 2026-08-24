@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 
-const LOCATION = "LA";
+const LOCATION = "NYC";
 const GAP = "\u00A0\u00A0";
 
 const FLAP_CHARS = "0123456789/:amp  ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -10,10 +10,10 @@ const STEP_MS = 50;
 const RANDOM_CYCLES = 12; // random chars before landing (~300ms total)
 const FLIP_DURATION_MS = STEP_MS * (RANDOM_CYCLES + 1);
 
-function formatPSTDateTime(): string {
+function formatESTDateTime(): string {
   const now = new Date();
   const formatter = new Intl.DateTimeFormat("en-US", {
-    timeZone: "America/Los_Angeles",
+    timeZone: "America/New_York",
     month: "2-digit",
     day: "2-digit",
     year: "numeric",
@@ -21,7 +21,7 @@ function formatPSTDateTime(): string {
   const dateStr = formatter.format(now);
 
   const timeFormatter = new Intl.DateTimeFormat("en-US", {
-    timeZone: "America/Los_Angeles",
+    timeZone: "America/New_York",
     hour: "numeric",
     minute: "2-digit",
     hour12: true,
@@ -81,7 +81,7 @@ function FlapChar({
 }
 
 export default function TimezonePill() {
-  const [display, setDisplay] = useState(() => formatPSTDateTime());
+  const [display, setDisplay] = useState(() => formatESTDateTime());
   const [lastChange, setLastChange] = useState<{
     prev: string;
     next: string;
@@ -90,7 +90,7 @@ export default function TimezonePill() {
 
   useEffect(() => {
     const tick = () => {
-      const next = formatPSTDateTime();
+      const next = formatESTDateTime();
       const prev = prevDisplayRef.current;
 
       if (next !== prev) {

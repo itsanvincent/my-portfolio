@@ -94,15 +94,19 @@ const SECTIONS = [
   {
     header: "Currently",
     bodySegments: [
-      { type: "text" as const, text: "I'm the cofounder and CEO of " },
-      { type: "link" as const, href: "https://www.stylar.com", text: "Stylar", external: true },
-      { type: "text" as const, text: ", an AI-native fashion discovery app." },
+      { type: "text" as const, text: "I'm building a new consumer primitive with " },
+      { type: "link" as const, href: "https://en.wikipedia.org/wiki/Andrew_Frame", text: "Andrew Frame", external: true },
+      { type: "text" as const, text: " and " },
+      { type: "link" as const, href: "https://en.wikipedia.org/wiki/Shawn_Fanning", text: "Shawn Fanning", external: true },
+      { type: "text" as const, text: ", in NYC." },
     ],
   },
   {
     header: "In the past",
     bodySegments: [
-      { type: "text" as const, text: "I've built an augmented fashion studio called " },
+      { type: "text" as const, text: "I've built an AI-native fashion discovery app called " },
+      { type: "link" as const, href: "https://www.stylar.com", text: "Stylar", external: true },
+      { type: "text" as const, text: "; an augmented fashion studio called " },
       { type: "span" as const, className: "underline underline-offset-2", text: "Sphene" },
       { type: "text" as const, text: "; led design at " },
       { type: "link" as const, href: "https://techcrunch.com/2020/07/23/augmented-reality-startup-mira-announces-10m-more-in-funding-from-sequoia-and-others/", text: "Mira", external: true },
@@ -282,7 +286,7 @@ export default function ProgressiveRevealBio({ mobileHero }: { mobileHero?: Reac
                 <h2 className="mobile-section-label mb-2">{s.header}</h2>
                 <p className="mobile-section-body">{renderBodyUpTo([...s.bodySegments], bodyLength(s.bodySegments))}</p>
                 {i === SECTIONS.length - 1 && (
-                  <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
+                  <div style={{ display: "flex", gap: 8, marginTop: 24 }}>
                     {SOCIAL_LINKS.map(({ href, icon, label }) => (
                       <a
                         key={href}
@@ -291,7 +295,7 @@ export default function ProgressiveRevealBio({ mobileHero }: { mobileHero?: Reac
                         rel="noopener noreferrer"
                         aria-label={label}
                       >
-                        <img src={icon} alt="" width={20} height={20} style={{ display: "block" }} />
+                        <img src={icon} alt="" width={24} height={24} style={{ display: "block" }} />
                       </a>
                     ))}
                   </div>
@@ -361,7 +365,7 @@ export default function ProgressiveRevealBio({ mobileHero }: { mobileHero?: Reac
                 <CaretDown isVisible={typewriterDone[i]} onClick={stepDown} />
               )}
               {i === SECTIONS.length - 1 && (
-                <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
+                <div style={{ display: "flex", gap: 8, marginTop: 24 }}>
                   {SOCIAL_LINKS.map(({ href, icon, label }) => (
                     <a
                       key={href}
@@ -370,7 +374,7 @@ export default function ProgressiveRevealBio({ mobileHero }: { mobileHero?: Reac
                       rel="noopener noreferrer"
                       aria-label={label}
                     >
-                      <img src={icon} alt="" width={20} height={20} style={{ display: "block" }} />
+                      <img src={icon} alt="" width={24} height={24} style={{ display: "block" }} />
                     </a>
                   ))}
                 </div>
