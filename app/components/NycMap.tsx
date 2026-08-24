@@ -49,8 +49,8 @@ export default function NycMap() {
     const map = new mapboxgl.Map({
       container: containerRef.current,
       style: isDayRef.current ? DAY_STYLE : NIGHT_STYLE,
-      center: [-73.985, 40.735],
-      zoom: 11,
+      center: [-73.975, 40.735],
+      zoom: 10.4,
       interactive: false,
       attributionControl: false,
     });
